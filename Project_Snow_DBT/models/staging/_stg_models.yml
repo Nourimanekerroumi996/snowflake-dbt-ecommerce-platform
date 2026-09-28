@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Clients nettoyés : une ligne par client"
+    columns:
+      - name: customer_id
+        description: "Identifiant unique du client (clé primaire)"
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Nom du client"
+        data_tests:
+          - not_null
+      - name: country_code
+        description: "Code pays du client en majuscules (FR, US, UK...)"
+        data_tests:
+          - not_null
+
+  - name: stg_products
+    description: "Produits nettoyés : une ligne par produit"
+    columns:
+      - name: product_id
+        description: "Identifiant unique du produit (clé primaire)"
+        data_tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Nom du produit"
+      - name: product_category
+        description: "Catégorie du produit"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Electronics', 'Accessories']
+
+  - name: stg_orders
+    description: "Commandes nettoyées et typées : une ligne par commande"
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande (clé primaire)"
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Client ayant passé la commande (clé étrangère vers stg_customers)"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: product_id
+        description: "Produit commandé (clé étrangère vers stg_products)"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+      - name: order_date
+        description: "Date de la commande"
+        data_tests:
+          - not_null
+      - name: amount
+        description: "Montant de la commande en euros"
+        data_tests:
+          - not_null
+          - positive_amount
+        
+
+  - name: stg_events
+    description: "Événements web extraits du JSON : une ligne par événement"
+    columns:
+      - name: user_id
+        description: "Utilisateur à l'origine de l'événement (clé étrangère vers stg_customers)"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: event_type
+        description: "Type d'événement : click, view ou purchase"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['click', 'view', 'purchase']
+      - name: event_timestamp
+        description: "Date et heure de l'événement"
+        data_tests:
+          - not_null

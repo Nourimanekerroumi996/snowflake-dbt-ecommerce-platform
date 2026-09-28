@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: int_orders_enriched
+    description: "Commandes enrichies avec les informations client et produit (orders + customers + products)"
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande"
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Identifiant du client"
+        data_tests:
+          - not_null
+      - name: country_code
+        description: "Pays du client (vide si le client est introuvable)"
+        data_tests:
+          - not_null
+      - name: product_name
+        description: "Nom du produit (vide si le produit est introuvable)"
+        data_tests:
+          - not_null
+      - name: amount
+        description: "Montant de la commande en euros"
+        data_tests:
+          - not_null
+
+  - name: int_events_agg
+    description: "Nombre d'événements par utilisateur, avec le détail par type"
+    columns:
+      - name: user_id
+        description: "Identifiant de l'utilisateur (une ligne par utilisateur)"
+        data_tests:
+          - unique
+          - not_null
+      - name: total_events
+        description: "Nombre total d'événements de l'utilisateur"
+        data_tests:
+          - not_null
+      - name: nb_views
+        description: "Nombre d'événements de type view"
+      - name: nb_clicks
+        description: "Nombre d'événements de type click"
+      - name: nb_purchases
+        description: "Nombre d'événements de type purchase"
+      - name: first_event_at
+        description: "Date du premier événement"
+      - name: last_event_at
+        description: "Date du dernier événement"

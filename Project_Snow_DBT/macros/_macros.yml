@@ -1,0 +1,43 @@
+version: 2
+
+macros:
+  - name: convert_amount
+    description: >
+      Convertit un montant dans une autre devise en le multipliant par un taux de change,
+      puis arrondit le résultat. Utilisée dans mart_revenue_by_country (CA en USD)
+      et dans les marts pour arrondir le panier moyen.
+    arguments:
+      - name: column_name
+        type: string
+        description: "Colonne ou expression SQL contenant le montant (ex : 'amount', 'sum(amount)')"
+      - name: rate
+        type: float
+        description: "Taux de change à appliquer (par défaut 1.0 = pas de conversion)"
+      - name: decimals
+        type: integer
+        description: "Nombre de décimales du résultat (par défaut 2)"
+
+  - name: generate_schema_name
+    description: >
+      Surcharge de la macro native de dbt. Utilise exactement le schéma défini dans
+      dbt_project.yml (STAGING, INTERMEDIATE, MART, SNAPSHOTS) au lieu de le préfixer
+      par le schéma du profil (ex : STAGING_MART).
+    arguments:
+      - name: custom_schema_name
+        type: string
+        description: "Schéma défini via +schema dans la configuration"
+      - name: node
+        type: object
+        description: "Le modèle en cours de compilation"
+
+  - name: test_positive_amount
+    description: >
+      Test générique custom : échoue si la colonne contient au moins une valeur négative.
+      Appliqué sur stg_orders.amount et mart_revenue_by_country.revenue_eur.
+    arguments:
+      - name: model
+        type: relation
+        description: "Le modèle testé"
+      - name: column_name
+        type: string
+        description: "La colonne testée"

@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Données brutes chargées depuis les fichiers CSV/JSON via COPY INTO"
+    database: ECOMMERCE_DB
+    schema: RAW
+    tables:
+      - name: orders
+        description: "Commandes brutes"
+      - name: customers
+        description: "Clients bruts"
+      - name: products
+        description: "Produits bruts"
+      - name: events
+        description: "Événements web bruts au format JSON (colonne VARIANT raw_data)"

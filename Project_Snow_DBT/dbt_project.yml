@@ -1,0 +1,50 @@
+# ============================================================
+# Projet dbt : Project_Snow_DBT
+# Plateforme data e-commerce sur Snowflake (architecture médaillon)
+# ============================================================
+
+name: 'Project_Snow_DBT'
+version: '1.0.0'
+
+# Profil de connexion défini dans ~/.dbt/profiles.yml
+profile: 'Project_Snow_DBT'
+
+# Emplacement des différents types de fichiers
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+# Dossiers supprimés par `dbt clean`
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# ============================================================
+# Configuration des modèles : 1 couche dbt = 1 schéma Snowflake
+# ============================================================
+models:
+  Project_Snow_DBT:
+    # Couche 1 : nettoyage des tables RAW (1 modèle par table source)
+    staging:
+      +schema: STAGING
+      +materialized: view
+
+    # Couche 2 : jointures et agrégations intermédiaires
+    intermediate:
+      +schema: INTERMEDIATE
+      +materialized: view
+
+    # Couche 3 : tables finales orientées métier
+    marts:
+      +schema: MART
+      +materialized: table
+
+# ============================================================
+# Configuration des snapshots (historique des changements clients)
+# ============================================================
+snapshots:
+  Project_Snow_DBT:
+    +schema: SNAPSHOTS

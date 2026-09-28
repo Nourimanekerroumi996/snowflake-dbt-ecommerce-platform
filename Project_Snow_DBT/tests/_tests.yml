@@ -1,0 +1,7 @@
+version: 2
+
+data_tests:
+  - name: assert_no_negative_amount
+    description: >
+      Test singulier (règle métier) : vérifie qu'aucune commande de stg_orders n'a un
+      montant négatif. Le test échoue s'il renvoie au moins une ligne.

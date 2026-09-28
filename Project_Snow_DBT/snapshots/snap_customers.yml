@@ -1,0 +1,28 @@
+snapshots:
+  - name: snap_customers
+    relation: source('raw', 'customers')
+    description: "Historique des changements des clients (SCD type 2)"
+    config:
+      unique_key: customer_id
+      strategy: check
+      check_cols: ['name', 'country']
+    columns:
+      - name: customer_id
+        description: "Identifiant du client (peut apparaître plusieurs fois : une ligne par version)"
+        data_tests:
+          - not_null
+      - name: country
+        description: "Pays du client dans cette version"
+        data_tests:
+          - not_null
+      - name: dbt_scd_id
+        description: "Identifiant unique de chaque version (généré par dbt)"
+        data_tests:
+          - unique
+          - not_null
+      - name: dbt_valid_from
+        description: "Début de validité de la version"
+        data_tests:
+          - not_null
+      - name: dbt_valid_to
+        description: "Fin de validité de la version (NULL = version actuelle)"

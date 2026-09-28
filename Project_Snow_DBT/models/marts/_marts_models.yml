@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: mart_revenue_by_country
+    description: "Chiffre d'affaires par pays, en EUR et en USD (conversion via la macro convert_amount)"
+    columns:
+      - name: country_code
+        description: "Code pays (une ligne par pays)"
+        data_tests:
+          - unique
+          - not_null
+      - name: nb_orders
+        description: "Nombre de commandes dans le pays"
+      - name: nb_customers
+        description: "Nombre de clients distincts dans le pays"
+      - name: revenue_eur
+        description: "Chiffre d'affaires en euros"
+        data_tests:
+          - not_null
+          - positive_amount
+      - name: revenue_usd
+        description: "Chiffre d'affaires converti en dollars (taux 1.08)"
+      - name: avg_order_value_eur
+        description: "Panier moyen en euros"
+      - name: revenue_share_pct
+        description: "Part du chiffre d'affaires total (en %)"
+
+  - name: mart_top_products
+    description: "Performance des produits : ventes, CA, classement"
+    columns:
+      - name: product_id
+        description: "Identifiant du produit (une ligne par produit)"
+        data_tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Nom du produit"
+      - name: product_category
+        description: "Catégorie du produit"
+      - name: nb_orders
+        description: "Nombre de commandes contenant ce produit"
+      - name: nb_customers
+        description: "Nombre de clients distincts ayant acheté ce produit"
+      - name: total_revenue
+        description: "Chiffre d'affaires généré par le produit"
+        data_tests:
+          - not_null
+      - name: revenue_share_pct
+        description: "Part du chiffre d'affaires total (en %)"
+      - name: sales_rank
+        description: "Classement du produit (1 = le plus vendu)"
+        data_tests:
+          - not_null
+
+  - name: fct_orders_incremental
+    description: "Table de faits des commandes, chargée de façon incrémentale (merge sur order_id)"
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande (clé du merge)"
+        data_tests:
+          - unique
+          - not_null
+      - name: amount
+        description: "Montant de la commande en euros"
+        data_tests:
+          - not_null
+      - name: dbt_loaded_at
+        description: "Date et heure à laquelle dbt a chargé ou mis à jour la ligne"

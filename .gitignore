@@ -1,0 +1,28 @@
+# Python virtual environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# dbt build artifacts
+Project_Snow_DBT/target/
+Project_Snow_DBT/dbt_packages/
+Project_Snow_DBT/logs/
+target/
+dbt_packages/
+logs/
+
+# dbt credentials (should live in ~/.dbt/, never in the repo)
+profiles.yml
+.user.yml
+
+# Secrets
+.env
+*.pem
+*.p8
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
